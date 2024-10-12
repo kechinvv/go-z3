@@ -82,6 +82,17 @@ func (s *Solver) Reset() {
 	runtime.KeepAlive(s)
 }
 
+
+func (s *Solver) AssertionsString() string {
+    var vector C.Z3_ast_vector = C.Z3_solver_get_assertions(s.ctx.c, s.c)
+	return C.GoString(C.Z3_ast_vector_to_string(s.ctx.c, vector))
+}
+
+func (s *Solver) NumScopes() uint {
+	a := uint(C.uint(C.Z3_solver_get_num_scopes(s.ctx.c, s.c)))
+	return a
+}
+
 // ErrSatUnknown is produced when Z3 cannot determine satisfiability.
 type ErrSatUnknown struct {
 	// Reason gives a brief description of why Z3 could not
