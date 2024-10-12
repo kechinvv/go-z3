@@ -4,7 +4,7 @@
 
 package st
 
-import "github.com/aclements/go-z3/z3"
+import "github.com/kechinvv/go-z3/z3"
 
 //go:generate go run gen.go -o types.go
 
