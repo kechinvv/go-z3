@@ -4,7 +4,11 @@
 
 package z3
 
-import "runtime"
+import (
+	"runtime"
+
+	"github.com/kechinvv/go-z3/z3"
+)
 
 /*
 #cgo LDFLAGS: -lz3
@@ -113,6 +117,26 @@ func (s *Solver) Reset() {
 func (s *Solver) AssertionsString() string {
 	var vector C.Z3_ast_vector = C.Z3_solver_get_assertions(s.ctx.c, s.c)
 	return C.GoString(C.Z3_ast_vector_to_string(s.ctx.c, vector))
+}
+
+func (s *Solver) Assertions() []Bool {
+	var asserts_vector C.Z3_ast_vector
+	var n C.uint
+	s.ctx.do(func() {
+		asserts_vector = C.Z3_solver_get_assertions(s.ctx.c, s.c)
+		C.Z3_ast_vector_inc_ref(s.ctx.c, asserts_vector)
+		n = C.Z3_ast_vector_size(s.ctx.c, asserts_vector)
+	})
+	defer s.ctx.do(func() { C.Z3_ast_vector_dec_ref(s.ctx.c, asserts_vector) })
+	asserts := make([]Bool, n)
+	for i := C.uint(0); i < n; i++ {
+		asserts[i] = Bool(wrapValue(s.ctx, func() C.Z3_ast {
+			return C.Z3_ast_vector_get(s.ctx.c, asserts_vector, i)
+		}))
+	}
+
+	runtime.KeepAlive(s)
+	return asserts
 }
 
 func (s *Solver) NumScopes() uint {
