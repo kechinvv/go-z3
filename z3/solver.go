@@ -6,8 +6,6 @@ package z3
 
 import (
 	"runtime"
-
-	"github.com/kechinvv/go-z3/z3"
 )
 
 /*
