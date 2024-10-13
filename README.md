@@ -23,7 +23,7 @@ export LD_LIBRARY_PATH=$Z3PREFIX/lib
 Then download and build go-z3:
 
 ```sh
-go get -u github.com/aclements/go-z3/z3
+go get -u github.com/kechinvv/go-z3/z3
 ```
 
 Documentation
